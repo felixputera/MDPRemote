@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">MDP Remote</string>
+    <string name="activity_tilt_steering">Tilt Steering</string>
+</resources>
