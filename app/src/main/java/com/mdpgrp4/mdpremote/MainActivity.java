@@ -1,31 +1,25 @@
 package com.mdpgrp4.mdpremote;
 
-import android.content.Context;
 import android.content.Intent;
-import android.hardware.Sensor;
-import android.hardware.SensorManager;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.Toast;
+
 
 public class MainActivity extends AppCompatActivity {
-
-    private SensorManager mSensorManager;
-    private Sensor mSensor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main_popup, menu);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_main_popup, menu);
         return true;
     }
 
@@ -35,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
             case R.id.menu_tilt_steering:
                 Intent tilt_steering_intent = new Intent(this, TiltSteeringActivity.class);
                 startActivity(tilt_steering_intent);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
