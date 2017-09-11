@@ -4,7 +4,11 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.GestureDetectorCompat;
 import android.util.AttributeSet;
+import android.util.Log;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
 
 
@@ -18,6 +22,7 @@ public class MapView extends View {
     private int[][] tileStatus;
     private Paint mUnexploredPaint, mEmptyPaint, mObstaclePaint, mSelectedPaint, mRobotPaint;
     private float xSize, ySize;
+    private GestureDetectorCompat detector;
 
 
     public MapView(Context context) {
@@ -57,6 +62,8 @@ public class MapView extends View {
         mRobotPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mRobotPaint.setColor(ContextCompat.getColor(context, R.color.mapRobot));
         mRobotPaint.setStyle(Paint.Style.FILL);
+
+        detector = new GestureDetectorCompat(getContext(), new GestureTap());
     }
 
     public void setTileStatus(int[][] status) {
@@ -80,8 +87,58 @@ public class MapView extends View {
                 float top = y * (ySize + TILE_MARGIN);
                 float right = left + xSize;
                 float bottom = top + ySize;
-                canvas.drawRect(left, top, right, bottom, mUnexploredPaint);
+                Paint tilePaint;
+                switch (tileStatus[x][y]) {
+                    case STATUS_UNEXPLORED:
+                        tilePaint = mUnexploredPaint;
+                        break;
+                    case STATUS_EMPTY:
+                        tilePaint = mEmptyPaint;
+                        break;
+                    case STATUS_OBSTACLE:
+                        tilePaint = mObstaclePaint;
+                        break;
+                    case STATUS_SELECTED:
+                        tilePaint = mSelectedPaint;
+                        break;
+                    case STATUS_ROBOT:
+                        tilePaint = mRobotPaint;
+                        break;
+                    default:
+                        tilePaint = mUnexploredPaint;
+                        break;
+                }
+                canvas.drawRect(left, top, right, bottom, tilePaint);
             }
+        }
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        detector.onTouchEvent(event);
+        return super.onTouchEvent(event);
+    }
+
+    private class GestureTap extends GestureDetector.SimpleOnGestureListener {
+        @Override
+        public boolean onDown(MotionEvent e) {
+            float touchX = e.getX();
+            float touchY = e.getY();
+
+            Log.d("touchX: ", String.valueOf(touchX));
+            Log.d("touchY: ", String.valueOf(touchY));
+
+            int x = (int) Math.round(Math.floor(touchX / (xSize + TILE_MARGIN)));
+            int y = (int) Math.round(Math.floor(touchY / (ySize + TILE_MARGIN)));
+
+            Log.d("x: ", String.valueOf(x));
+            Log.d("y: ", String.valueOf(y));
+
+            tileStatus[x][y] = STATUS_SELECTED;
+
+            MapView.this.invalidate();
+
+            return true;
         }
     }
 }

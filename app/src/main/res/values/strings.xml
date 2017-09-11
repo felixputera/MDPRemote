@@ -1,4 +1,15 @@
 <resources>
     <string name="app_name">MDP Remote</string>
     <string name="activity_tilt_steering">Tilt Steering</string>
+
+    <string name="bluetooth_connect">Connect Bluetooth</string>
+    <string name="bluetooth_disconnect">Disconnect Bluetooth</string>
+
+    <!--bluetooth dialog strings-->
+    <string name="bt_dialog_title">Bluetooth</string>
+    <string name="bt_dialog_available_devices">Available Devices</string>
+    <string name="bt_dialog_scan">Scan</string>
+    <string name="bt_dialog_stop_scan">Stop</string>
+    <string name="bt_dialog_done">Done</string>
+    <string name="bt_dialog_not_found">No Bluetooth devices found</string>
 </resources>

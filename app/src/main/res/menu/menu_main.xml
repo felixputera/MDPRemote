@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_bluetooth_connect"
+        android:icon="@drawable/ic_menu_bluetooth_connect"
+        android:title="@string/bluetooth_connect"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_bluetooth_disconnect"
+        android:icon="@drawable/ic_menu_bluetooth_disconnect"
+        android:title="@string/bluetooth_disconnect"
+        android:visible="false"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/menu_tilt_steering"
+        android:title="@string/activity_tilt_steering"
+        app:showAsAction="never" />
+</menu>

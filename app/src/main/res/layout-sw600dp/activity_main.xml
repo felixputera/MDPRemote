@@ -8,6 +8,7 @@
     tools:menu="@menu/menu_main_popup">
 
     <com.mdpgrp4.mdpremote.MapView
+        android:id="@+id/mapView"
         android:layout_width="450dp"
         android:layout_height="600dp"
         android:layout_marginLeft="0dp"
