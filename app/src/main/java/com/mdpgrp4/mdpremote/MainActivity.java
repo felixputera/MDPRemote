@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
 
     private MapView mapView;
     private BluetoothHelper bluetoothHelper;
-
+    private DialogFragment btDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +87,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void openBtDialog() {
+
         int MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION = 1;
         ActivityCompat.requestPermissions(this,
                 new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
@@ -98,7 +99,16 @@ public class MainActivity extends AppCompatActivity {
         }
         ft.addToBackStack(null);
 
-        DialogFragment btDialog = BtDialogFragment.newInstance(bluetoothHelper.getBluetoothAdapter());
+        // create & start bluetooth server thread waiting for connection
+        BtServerThread serverThread = new BtServerThread(bluetoothHelper.getBluetoothAdapter(), this);
+        serverThread.start();
+
+        // finally, show dialog
+        btDialog = BtDialogFragment.newInstance(bluetoothHelper.getBluetoothAdapter());
         btDialog.show(ft, "btDialog");
+    }
+
+    public DialogFragment getBtDialog() {
+        return btDialog;
     }
 }

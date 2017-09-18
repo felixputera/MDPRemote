@@ -8,10 +8,21 @@
     android:orientation="vertical">
 
     <TextView
-        android:id="@+id/deviceTV"
-        style="@style/DialogResText"
+        android:id="@+id/deviceName"
+        style="@style/DialogDeviceName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="12dp"
+        android:paddingLeft="12dp"
+        android:paddingTop="12dp"
+        tools:text="TextView" />
+
+    <TextView
+        android:id="@+id/deviceMac"
+        style="@style/DialogDeviceMac"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="12dp"
+        android:paddingLeft="12dp"
+        android:paddingTop="0dp"
         tools:text="TextView" />
 </LinearLayout>

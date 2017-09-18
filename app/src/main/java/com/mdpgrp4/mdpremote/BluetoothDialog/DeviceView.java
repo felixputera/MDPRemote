@@ -45,8 +45,10 @@ class DeviceView extends LinearLayout {
     public void setDeviceValues(String dAddress, String dName) {
         deviceAddress = dAddress;
         deviceName = dName;
-        TextView deviceTV = (TextView) findViewById(R.id.deviceTV);
-        deviceTV.setText(deviceName);
+        TextView deviceNameView = (TextView) findViewById(R.id.deviceName);
+        TextView deviceMacView = (TextView) findViewById(R.id.deviceMac);
+        deviceNameView.setText(deviceName);
+        deviceMacView.setText(deviceAddress);
     }
 
     @Override

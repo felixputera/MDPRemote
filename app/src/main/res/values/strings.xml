@@ -12,4 +12,8 @@
     <string name="bt_dialog_stop_scan">Stop</string>
     <string name="bt_dialog_done">Done</string>
     <string name="bt_dialog_not_found">No Bluetooth devices found</string>
+
+    <string name="bt_discoverable">Device is discoverable</string>
+    <string name="bt_connectable">Device is  not discoverable but can receive connection</string>
+    <string name="bt_none">Device is not discoverable and cannot receive connection</string>
 </resources>

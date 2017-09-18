@@ -23,9 +23,14 @@
         <item name="android:textSize">20sp</item>
     </style>
 
-    <style name="DialogResText" parent="@android:style/TextAppearance">
+    <style name="DialogDeviceName" parent="@android:style/TextAppearance">
         <item name="android:textColor">#212121</item>
         <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="DialogDeviceMac" parent="@android:style/TextAppearance">
+        <item name="android:textColor">#9E9E9E</item>
+        <item name="android:textSize">16sp</item>
     </style>
 
 </resources>
