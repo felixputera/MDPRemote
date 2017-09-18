@@ -4,9 +4,11 @@ import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothSocket;
 import android.os.Handler;
+import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,47 +18,32 @@ import java.io.OutputStream;
  * Created by felix on 9/17/2017.
  */
 
-public class BtConnectionThread extends Thread {
+public class BtConnectionThread extends Thread implements Handler.Callback {
+    private final Object mutex = new Object();
     private BluetoothSocket mSocket;
     private InputStream mInStream;
     private OutputStream mOutStream;
     private byte[] mBuffer;
     private BluetoothAdapter btAdapter;
     private Activity mActivity;
-
-    private final Handler mHandler = new Handler(Looper.myLooper()) {
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case MessageConstants.MESSAGE_IN:
-                    String message = new String((byte[]) msg.obj);
-                    Log.d("MDP_REMOTE_DEBUG", "Message: " + message);
-                    break;
-                case MessageConstants.MESSAGE_OUT:
-                    break;
-                case MessageConstants.BT_CONNECTED:
-                    mActivity.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            ((MainActivity) mActivity).getBtDialog().dismiss();
-                        }
-                    });
-                    break;
-                case MessageConstants.BT_DISCONNECTED:
-                    break;
-            }
-        }
-    };
+    private Handler handler;
+    private boolean running = true;
 
     public BtConnectionThread(BluetoothAdapter btAdapter, Activity mActivity) {
         this.btAdapter = btAdapter;
         this.mActivity = mActivity;
-
-//        mHandler.sendEmptyMessage(MessageConstants.BT_CONNECTED);
     }
 
     @Override
     public void run() {
+        HandlerThread handlerThread = new HandlerThread("MyHandlerThread");
+        handlerThread.start();
+
+        Looper looper = handlerThread.getLooper();
+
+        handler = new Handler(looper, this);
+        handler.sendEmptyMessage(MessageConstants.BT_CONNECTED);
+
         mBuffer = new byte[1024];
         int numBytes; // bytes returned from read()
         while (true) {
@@ -64,17 +51,27 @@ public class BtConnectionThread extends Thread {
                 // Read from the InputStream.
                 numBytes = mInStream.read(mBuffer);
                 // Send the obtained bytes to the UI activity.
-                Message arriveMsg = mHandler.obtainMessage(MessageConstants.MESSAGE_IN,
+                Message arriveMsg = handler.obtainMessage(MessageConstants.MESSAGE_IN,
                         0, numBytes, mBuffer);
                 arriveMsg.sendToTarget();
             } catch (IOException e) {
                 Log.d("MDP_REMOTE_DEBUG", "Input stream was disconnected", e);
-                // create bluetooth server after disconnection
+                handler.sendEmptyMessage(MessageConstants.BT_DISCONNECTED);
+                // create bluetooth server thread after disconnection
                 BtServerThread serverThread = new BtServerThread(btAdapter, mActivity);
                 serverThread.start();
                 break;
             }
+
+//            synchronized (mutex) {
+//                try {
+//                    mutex.wait();
+//                } catch (InterruptedException e) {
+//
+//                }
+//            }
         }
+
     }
 
     public void setBtSocket(BluetoothSocket socket) {
@@ -97,11 +94,55 @@ public class BtConnectionThread extends Thread {
         mOutStream = tmpOut;
     }
 
+//    public void shutdown() {
+//        running = false;
+//
+//        synchronized (mutex) {
+//            mutex.notifyAll();
+//        }
+//    }
+
+    @Override
+    public boolean handleMessage(Message message) {
+        switch (message.what) {
+            case MessageConstants.MESSAGE_IN:
+                String msg = new String((byte[]) message.obj);
+                Log.d("MDP_REMOTE_DEBUG", "Message: " + msg);
+                break;
+            case MessageConstants.MESSAGE_OUT:
+                break;
+            case MessageConstants.BT_CONNECTED:
+                mActivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        ((MainActivity) mActivity).getBtDialog().dismiss();
+                        Toast.makeText(mActivity,
+                                "Connected to " + mSocket.getRemoteDevice().getName(),
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
+                break;
+            case MessageConstants.BT_DISCONNECTED:
+                mActivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(mActivity,
+                                "Bluetooth disconnected",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
+                break;
+            default:
+                return false;
+        }
+        return true;
+    }
+
     private interface MessageConstants {
-        public static final int MESSAGE_IN = 0;
-        public static final int MESSAGE_OUT = 1;
-        public static final int BT_CONNECTED = 2;
-        public static final int BT_DISCONNECTED = 3;
+        int MESSAGE_IN = 0;
+        int MESSAGE_OUT = 1;
+        int BT_CONNECTED = 2;
+        int BT_DISCONNECTED = 3;
     }
 
 }
