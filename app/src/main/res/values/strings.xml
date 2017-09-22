@@ -16,4 +16,15 @@
     <string name="bt_discoverable">Device is discoverable</string>
     <string name="bt_connectable">Device is  not discoverable but can receive connection</string>
     <string name="bt_none">Device is not discoverable and cannot receive connection</string>
+
+    <!--controller strings-->
+    <string name="activity_controller">Controller</string>
+    <string name="ctrPath">Path</string>
+    <string name="ctrExplore">Explore</string>
+    <string name="ctrReverse">Reverse</string>
+    <string name="ctrLeft">Left</string>
+    <string name="ctrRight">Right</string>
+    <string name="ctrForward">Forward</string>
+    <string name="ctrStrafeLeft">Strafe Left</string>
+    <string name="ctrStrafeRight">Strafe Right</string>
 </resources>

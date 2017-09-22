@@ -10,4 +10,10 @@
     <color name="mapRobot">#E91E63</color>
     <color name="mapSelected">#00796B</color>
     <color name="mapEmpty">#BDBDBD</color>
+
+    <!--controller colors-->
+    <color name="controllerDirections">#FFFF33</color>
+    <color name="controllerInit">#E91E63</color>
+    <color name="controllerStrafe">#33FFE6</color>
+
 </resources>
