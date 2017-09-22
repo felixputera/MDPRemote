@@ -3,6 +3,7 @@ package com.mdpgrp4.mdpremote;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothSocket;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
@@ -136,6 +137,37 @@ public class BtConnectionThread extends Thread implements Handler.Callback {
                 return false;
         }
         return true;
+    }
+
+    public void write(byte[] bytes) {
+        try {
+            mOutStream.write(bytes);
+
+            // Share the sent message with the UI activity.
+            Message writtenMsg = handler.obtainMessage(
+                    MessageConstants.MESSAGE_OUT, -1, -1, mBuffer);
+            writtenMsg.sendToTarget();
+        } catch (IOException e) {
+            Log.e("MDP_REMOTE_ERROR", "Error occurred when sending data", e);
+
+            // Send a failure message back to the activity.
+//            Message writeErrorMsg =
+//                    handler.obtainMessage(MessageConstants.MESSAGE_TOAST);
+//            Bundle bundle = new Bundle();
+//            bundle.putString("toast",
+//                    "Couldn't send data to the other device");
+//            writeErrorMsg.setData(bundle);
+//            handler.sendMessage(writeErrorMsg);
+        }
+    }
+
+    // Call this method from the main activity to shut down the connection.
+    public void cancel() {
+        try {
+            mSocket.close();
+        } catch (IOException e) {
+            Log.e("MDP_REMOTE_ERROR", "Could not close the connect socket", e);
+        }
     }
 
     private interface MessageConstants {
