@@ -1,12 +1,16 @@
 package com.mdpgrp4.mdpremote;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.bluetooth.BluetoothAdapter;
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -15,12 +19,32 @@ import android.view.MenuItem;
 
 import com.mdpgrp4.mdpremote.BluetoothDialog.BtDialogFragment;
 
+import java.io.Serializable;
 
-public class MainActivity extends AppCompatActivity {
+
+public class MainActivity extends AppCompatActivity implements MainActivityCallbacks {
 
     private MapView mapView;
     private BluetoothHelper bluetoothHelper;
     private DialogFragment btDialog;
+    BluetoothService mService;
+    boolean mBound = false;
+    Intent bluetoothIntent = new Intent(this, BluetoothService.class);
+    private boolean bluetoothIsStarted = false;
+
+    private ServiceConnection mConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+            BluetoothService.BluetoothBinder binder = (BluetoothService.BluetoothBinder) iBinder;
+            mService = binder.getService();
+            mBound = true;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+            mBound = false;
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +62,27 @@ public class MainActivity extends AppCompatActivity {
         mapView.setTileStatus(tileStatus);
 
         bluetoothHelper = new BluetoothHelper();
+
+        bluetoothIntent.putExtra("activity_id", 1);
+        startService(bluetoothIntent);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (bluetoothIsStarted) {
+            bindService(bluetoothIntent, mConnection, BIND_ABOVE_CLIENT);
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        if (mBound) {
+            unbindService(mConnection);
+            mBound = false;
+        }
     }
 
     @Override
@@ -87,7 +132,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void openBtDialog() {
-
+        if (!bluetoothIsStarted) {
+            bindService(bluetoothIntent, mConnection, BIND_ABOVE_CLIENT);
+            bluetoothIsStarted = true;
+        }
         int MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION = 1;
         ActivityCompat.requestPermissions(this,
                 new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
@@ -99,9 +147,7 @@ public class MainActivity extends AppCompatActivity {
         }
         ft.addToBackStack(null);
 
-        // create & start bluetooth server thread waiting for connection
-        BtServerThread serverThread = new BtServerThread(bluetoothHelper.getBluetoothAdapter(), this);
-        serverThread.start();
+
 
         // finally, show dialog
         btDialog = BtDialogFragment.newInstance(bluetoothHelper.getBluetoothAdapter());
@@ -110,5 +156,10 @@ public class MainActivity extends AppCompatActivity {
 
     public DialogFragment getBtDialog() {
         return btDialog;
+    }
+
+    @Override
+    public Activity getCurrentActivity() {
+        return this;
     }
 }
