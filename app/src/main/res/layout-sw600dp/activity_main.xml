@@ -19,4 +19,131 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:layout_editor_absoluteX="-9dp" />
+
+    <Button
+        android:id="@+id/forwardBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minWidth="0dp"
+        android:minHeight="0dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="19dp"
+        android:text="string/ctrForward"
+        app:layout_constraintLeft_toLeftOf="@+id/leftBtn"
+        app:layout_constraintRight_toRightOf="@+id/rightBtn"
+        app:layout_constraintTop_toBottomOf="@+id/mapView"
+        app:layout_constraintHorizontal_bias="0.487" />
+
+    <Button
+        android:id="@+id/leftBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minWidth="0dp"
+        android:minHeight="0dp"
+        android:layout_marginLeft="127dp"
+        android:layout_marginTop="7dp"
+        android:text="@string/ctrLeft"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/forwardBtn" />
+
+    <Button
+        android:id="@+id/rightBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="17dp"
+        android:minHeight="0dp"
+        android:minWidth="0dp"
+        android:text="@string/ctrRight"
+        app:layout_constraintLeft_toRightOf="@+id/leftBtn"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/forwardBtn" />
+
+    <Button
+        android:id="@+id/reverseBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:minHeight="0dp"
+        android:minWidth="0dp"
+        android:text="@string/ctrReverse"
+        app:layout_constraintLeft_toLeftOf="@+id/leftBtn"
+        app:layout_constraintRight_toRightOf="@+id/rightBtn"
+        app:layout_constraintHorizontal_bias="0.487"
+        android:layout_marginTop="7dp"
+        app:layout_constraintTop_toBottomOf="@+id/rightBtn" />
+
+    <Button
+        android:id="@+id/functionB"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="144dp"
+        android:text="@string/function_b"
+        app:layout_constraintTop_toBottomOf="@+id/mapView"
+        android:layout_marginRight="87dp"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <Button
+        android:id="@+id/functionA"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="144dp"
+        android:text="@string/function_a"
+        app:layout_constraintTop_toBottomOf="@+id/mapView"
+        app:layout_constraintRight_toLeftOf="@+id/functionB"
+        android:layout_marginRight="10dp" />
+
+    <Button
+        android:id="@+id/exploreBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="84dp"
+        android:text="explore"
+        app:layout_constraintRight_toLeftOf="@+id/pathBtn"
+        app:layout_constraintTop_toBottomOf="@+id/mapView" />
+
+    <Button
+        android:id="@+id/startPointBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="19dp"
+        android:text="@string/ctrStartPoint"
+        app:layout_constraintRight_toLeftOf="@+id/wayPointBtn"
+        app:layout_constraintTop_toBottomOf="@+id/mapView" />
+
+    <Button
+        android:id="@+id/wayPointBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="0dp"
+        android:layout_marginRight="66dp"
+        android:layout_marginTop="0dp"
+        android:text="@string/ctrWayPoint"
+        app:layout_constraintBottom_toBottomOf="@+id/startPointBtn"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/startPointBtn"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <Button
+        android:id="@+id/pathBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="103dp"
+        android:text="@string/ctrPath"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginTop="84dp"
+        app:layout_constraintTop_toBottomOf="@+id/mapView" />
+    <PreferenceCategory
+        android:title="@string/dialog_based_preferences">
+
+        <EditTextPreference
+            android:key="edittext_preference"
+            android:title="@string/title_edittext_preference"
+            android:summary="@string/summary_edittext_preference"
+            android:dialogTitle="@string/dialog_title_edittext_preference" />
+
+    </PreferenceCategory>
 </android.support.constraint.ConstraintLayout>
