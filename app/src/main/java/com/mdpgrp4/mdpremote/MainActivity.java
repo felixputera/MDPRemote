@@ -1,7 +1,6 @@
 package com.mdpgrp4.mdpremote;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
@@ -13,24 +12,30 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.mdpgrp4.mdpremote.BluetoothDialog.BtDialogFragment;
 
-import java.io.Serializable;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 
-public class MainActivity extends AppCompatActivity implements MainActivityCallbacks {
+public class MainActivity extends AppCompatActivity {
 
+    private final String TAG = "MAIN_ACTIVITY";
+    BluetoothService mService;
+    boolean mBound = false;
+    Intent bluetoothIntent = null;
     private MapView mapView;
     private BluetoothHelper bluetoothHelper;
     private DialogFragment btDialog;
-    BluetoothService mService;
-    boolean mBound = false;
-    Intent bluetoothIntent = new Intent(this, BluetoothService.class);
     private boolean bluetoothIsStarted = false;
+    private boolean bluetoothConnected = false;
 
     private ServiceConnection mConnection = new ServiceConnection() {
         @Override
@@ -62,14 +67,14 @@ public class MainActivity extends AppCompatActivity implements MainActivityCallb
         mapView.setTileStatus(tileStatus);
 
         bluetoothHelper = new BluetoothHelper();
-
-        bluetoothIntent.putExtra("activity_id", 1);
+        bluetoothIntent = new Intent(this, BluetoothService.class);
         startService(bluetoothIntent);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+        EventBus.getDefault().register(this);
         if (bluetoothIsStarted) {
             bindService(bluetoothIntent, mConnection, BIND_ABOVE_CLIENT);
         }
@@ -77,18 +82,25 @@ public class MainActivity extends AppCompatActivity implements MainActivityCallb
 
     @Override
     protected void onStop() {
-        super.onStop();
-
+        EventBus.getDefault().unregister(this);
         if (mBound) {
             unbindService(mConnection);
             mBound = false;
         }
+        super.onStop();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_main, menu);
+        if (bluetoothConnected) {
+            menu.findItem(R.id.action_bluetooth_connect).setVisible(false);
+            menu.findItem(R.id.action_bluetooth_disconnect).setVisible(true);
+        } else {
+            menu.findItem(R.id.action_bluetooth_disconnect).setVisible(false);
+            menu.findItem(R.id.action_bluetooth_connect).setVisible(true);
+        }
         return true;
     }
 
@@ -101,6 +113,11 @@ public class MainActivity extends AppCompatActivity implements MainActivityCallb
                 return true;
             case R.id.action_bluetooth_connect:
                 enableBluetooth();
+                return true;
+            case R.id.action_bluetooth_disconnect:
+                if (mBound) {
+                    mService.disconnectBtSocket();
+                }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -147,19 +164,31 @@ public class MainActivity extends AppCompatActivity implements MainActivityCallb
         }
         ft.addToBackStack(null);
 
-
-
         // finally, show dialog
         btDialog = BtDialogFragment.newInstance(bluetoothHelper.getBluetoothAdapter());
         btDialog.show(ft, "btDialog");
     }
 
-    public DialogFragment getBtDialog() {
-        return btDialog;
-    }
-
-    @Override
-    public Activity getCurrentActivity() {
-        return this;
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onBluetoothEvent(BluetoothEvent event) {
+        switch (event.status) {
+            case BluetoothEvent.CONNECTED:
+                Toast.makeText(this, "Connected to device", Toast.LENGTH_SHORT).show();
+                if (btDialog.isVisible()) {
+                    Log.d(TAG, "Dialog is visible");
+                    btDialog.dismiss();
+                }
+                bluetoothConnected = true;
+                invalidateOptionsMenu();
+                break;
+            case BluetoothEvent.DISCONNECTED:
+                Toast.makeText(this, "Disconnected from device", Toast.LENGTH_SHORT).show();
+                bluetoothConnected = false;
+                invalidateOptionsMenu();
+                break;
+            case BluetoothEvent.MESSAGE_RECEIVED:
+                Toast.makeText(this, "Message: " + event.message, Toast.LENGTH_SHORT).show();
+                break;
+        }
     }
 }

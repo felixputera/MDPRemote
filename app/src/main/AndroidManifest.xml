@@ -26,6 +26,7 @@
             android:label="@string/activity_tilt_steering"
             android:parentActivityName=".MainActivity"
             android:screenOrientation="landscape" />
-        <service android:name=".BluetoothService"/>
+
+        <service android:name=".BluetoothService"></service>
     </application>
 </manifest>
