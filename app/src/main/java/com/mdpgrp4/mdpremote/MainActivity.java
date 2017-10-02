@@ -16,7 +16,12 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.ImageButton;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.mdpgrp4.mdpremote.BluetoothDialog.BtDialogFragment;
 
@@ -36,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
     private DialogFragment btDialog;
     private boolean bluetoothIsStarted = false;
     private boolean bluetoothConnected = false;
+    private ImageButton buttonRight, buttonLeft;
 
     private ServiceConnection mConnection = new ServiceConnection() {
         @Override
@@ -58,13 +64,31 @@ public class MainActivity extends AppCompatActivity {
 
         mapView = (MapView) findViewById(R.id.mapView);
 
-        int[][] tileStatus = new int[15][20];
-        for (int x = 0; x < 15; x++) {
-            for (int y = 0; y < 20; y++) {
-                tileStatus[x][y] = MapView.STATUS_ROBOT;
+//        int[][] tileStatus = new int[15][20];
+//        for (int x = 0; x < 15; x++) {
+//            for (int y = 0; y < 20; y++) {
+//                tileStatus[x][y] = MapView.STATUS_ROBOT;
+//            }
+//        }
+//        mapView.setTileStatus(tileStatus);
+
+        ToggleButton robotToggle = (ToggleButton) findViewById(R.id.robotToggle);
+        robotToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                Button buttonRotateAnti = (Button) findViewById(R.id.buttonRotateAnti);
+                Button buttonRotateClock = (Button) findViewById(R.id.buttonRotateClock);
+                if (isChecked) {
+                    buttonRotateAnti.setEnabled(true);
+                    buttonRotateClock.setEnabled(true);
+                    mapView.enableTouchRobot();
+                } else {
+                    buttonRotateAnti.setEnabled(false);
+                    buttonRotateClock.setEnabled(false);
+                    mapView.disableTouchRobot();
+                }
             }
-        }
-        mapView.setTileStatus(tileStatus);
+        });
+
 
         bluetoothHelper = new BluetoothHelper();
         bluetoothIntent = new Intent(this, BluetoothService.class);
@@ -146,6 +170,19 @@ public class MainActivity extends AppCompatActivity {
                 openBtDialog();
             }
         }
+    }
+
+    public void rotateRobotAnti(View view) {
+        mapView.rotateRobotAnti();
+    }
+
+    public void rotateRobotClock(View view) {
+        mapView.rotateRobotClock();
+    }
+
+    public void explore(View view) {
+        findViewById(R.id.waypointToggle).setEnabled(true);
+        findViewById(R.id.fastestPathButton).setEnabled(true);
     }
 
     private void openBtDialog() {

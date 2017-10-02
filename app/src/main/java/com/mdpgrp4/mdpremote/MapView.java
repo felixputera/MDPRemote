@@ -18,11 +18,23 @@ public class MapView extends View {
     public static final int STATUS_OBSTACLE = 2;
     public static final int STATUS_SELECTED = 3;
     public static final int STATUS_ROBOT = 4;
+    public static final int STATUS_ROBOT_ORIENTATION = 5;
+
+    public static final int ORIENTATION_UP = 0;
+    public static final int ORIENTATION_RIGHT = 1;
+    public static final int ORIENTATION_DOWN = 2;
+    public static final int ORIENTATION_LEFT = 3;
+
     private static final int TILE_MARGIN = 5;
     private int[][] tileStatus;
-    private Paint mUnexploredPaint, mEmptyPaint, mObstaclePaint, mSelectedPaint, mRobotPaint;
+    private Paint mUnexploredPaint, mEmptyPaint, mObstaclePaint, mSelectedPaint, mRobotPaint, mOrientationPaint;
     private float xSize, ySize;
     private GestureDetectorCompat detector;
+    private boolean touchEnabled = false;
+    private boolean touchRobot = false;
+    private boolean touchWaypoint = false;
+    private int[] robotPos = {0, 19};
+    private int robotOrientation = ORIENTATION_LEFT;
 
 
     public MapView(Context context) {
@@ -63,11 +75,35 @@ public class MapView extends View {
         mRobotPaint.setColor(ContextCompat.getColor(context, R.color.mapRobot));
         mRobotPaint.setStyle(Paint.Style.FILL);
 
+        mOrientationPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mOrientationPaint.setColor(ContextCompat.getColor(context, R.color.mapRobotOrientation));
+        mOrientationPaint.setStyle(Paint.Style.FILL);
+
         detector = new GestureDetectorCompat(getContext(), new GestureTap());
     }
 
     public void setTileStatus(int[][] status) {
         tileStatus = status;
+    }
+
+    public void enableTouchRobot() {
+        touchEnabled = true;
+        touchRobot = true;
+    }
+
+    public void disableTouchRobot() {
+        touchEnabled = false;
+        touchRobot = false;
+    }
+
+    public void rotateRobotAnti() {
+        robotOrientation = (robotOrientation + 3) % 4;
+        MapView.this.invalidate();
+    }
+
+    public void rotateRobotClock() {
+        robotOrientation = (robotOrientation + 1) % 4;
+        MapView.this.invalidate();
     }
 
     @Override
@@ -81,6 +117,7 @@ public class MapView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
+        setRobotTile();
         for (int x = 0; x < 15; x++) {
             for (int y = 0; y < 20; y++) {
                 float left = x * (xSize + TILE_MARGIN);
@@ -104,6 +141,9 @@ public class MapView extends View {
                     case STATUS_ROBOT:
                         tilePaint = mRobotPaint;
                         break;
+                    case STATUS_ROBOT_ORIENTATION:
+                        tilePaint = mOrientationPaint;
+                        break;
                     default:
                         tilePaint = mUnexploredPaint;
                         break;
@@ -115,8 +155,44 @@ public class MapView extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        detector.onTouchEvent(event);
+        if (touchEnabled) {
+            detector.onTouchEvent(event);
+        }
         return super.onTouchEvent(event);
+    }
+
+    private void setRobotTile() {
+        for (int i = 0; i < 15; i++) {
+            for (int j = 0; j < 20; j++) {
+                if (i >= robotPos[0] && i <= robotPos[0] + 2 && j <= robotPos[1] && j >= robotPos[1] - 2) {
+                    tileStatus[i][j] = STATUS_ROBOT;
+                    switch (robotOrientation) {
+                        case ORIENTATION_UP:
+                            if (i == robotPos[0] + 1 && j == robotPos[1] - 2) {
+                                tileStatus[i][j] = STATUS_ROBOT_ORIENTATION;
+                            }
+                            break;
+                        case ORIENTATION_RIGHT:
+                            if (i == robotPos[0] + 2 && j == robotPos[1] - 1) {
+                                tileStatus[i][j] = STATUS_ROBOT_ORIENTATION;
+                            }
+                            break;
+                        case ORIENTATION_DOWN:
+                            if (i == robotPos[0] + 1 && j == robotPos[1]) {
+                                tileStatus[i][j] = STATUS_ROBOT_ORIENTATION;
+                            }
+                            break;
+                        case ORIENTATION_LEFT:
+                            if (i == robotPos[0] && j == robotPos[1] - 1) {
+                                tileStatus[i][j] = STATUS_ROBOT_ORIENTATION;
+                            }
+                            break;
+                    }
+                } else if (tileStatus[i][j] == STATUS_ROBOT || tileStatus[i][j] == STATUS_ROBOT_ORIENTATION) {
+                    tileStatus[i][j] = STATUS_UNEXPLORED;
+                }
+            }
+        }
     }
 
     private class GestureTap extends GestureDetector.SimpleOnGestureListener {
@@ -134,10 +210,30 @@ public class MapView extends View {
             Log.d("x: ", String.valueOf(x));
             Log.d("y: ", String.valueOf(y));
 
-            tileStatus[x][y] = STATUS_SELECTED;
+            if (touchRobot) {
+                if (y <= 2) {
+                    y = 2;
+                }
+                if (x >= 12) {
+                    x = 12;
+                }
+                robotPos[0] = x;
+                robotPos[1] = y;
 
-            MapView.this.invalidate();
+                MapView.this.invalidate();
+            } else if (touchWaypoint) {
+                for (int i = 0; i < 15; i++) {
+                    for (int j = 0; j < 20; j++) {
+                        if (i == x && j == y) {
+                            tileStatus[i][j] = STATUS_SELECTED;
+                        } else {
+                            tileStatus[i][j] = STATUS_UNEXPLORED;
+                        }
+                    }
+                }
 
+                MapView.this.invalidate();
+            }
             return true;
         }
     }

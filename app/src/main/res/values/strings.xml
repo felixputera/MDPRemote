@@ -16,4 +16,17 @@
     <string name="bt_discoverable">Device is discoverable</string>
     <string name="bt_connectable">Device is  not discoverable but can receive connection</string>
     <string name="bt_none">Device is not discoverable and cannot receive connection</string>
+
+    <!--button strings-->
+    <string name="button_explore">Explore</string>
+    <string name="button_fastest_path">Fastest Path</string>
+
+    <string name="button_robot">Robot</string>
+    <string name="button_robot_set">Set Robot</string>
+
+    <string name="button_waypoint">Waypoint</string>
+    <string name="button_waypoint_set">Set Waypoint</string>
+
+    <string name="button_rotate_anti">⟲</string>
+    <string name="button_rotate_clock">⟳</string>
 </resources>
