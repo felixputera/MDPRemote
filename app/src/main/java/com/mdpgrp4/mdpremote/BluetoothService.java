@@ -65,6 +65,12 @@ public class BluetoothService extends Service {
         }
     }
 
+    public void writeBtOut(String data) {
+        if (mConnectionThread != null) {
+            mConnectionThread.write(data.getBytes());
+        }
+    }
+
     public class BluetoothBinder extends Binder {
         BluetoothService getService() {
             return BluetoothService.this;
