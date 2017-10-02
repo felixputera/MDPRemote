@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
         mapView = (MapView) findViewById(R.id.mapView);
 
 //        int[][] tileStatus = new int[15][20];
-//        for (int x = 0; x < 15; x++) {
+//        for (int x = 0; x < 15; x++) {z
 //            for (int y = 0; y < 20; y++) {
 //                tileStatus[x][y] = MapView.STATUS_ROBOT;
 //            }
@@ -151,6 +151,10 @@ public class MainActivity extends AppCompatActivity {
             case R.id.menu_tilt_steering:
                 Intent tilt_steering_intent = new Intent(this, TiltSteeringActivity.class);
                 startActivity(tilt_steering_intent);
+                return true;
+            case R.id.controller:
+                Intent controller = new Intent(this, Controller.class);
+                startActivity(controller);
                 return true;
             case R.id.action_bluetooth_connect:
                 enableBluetooth();

@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">MDP Remote</string>
     <string name="activity_tilt_steering">Tilt Steering</string>
+    <string name="controller">Controller</string>
 
     <string name="bluetooth_connect">Connect Bluetooth</string>
     <string name="bluetooth_disconnect">Disconnect Bluetooth</string>
@@ -29,4 +30,7 @@
 
     <string name="button_rotate_anti">⟲</string>
     <string name="button_rotate_clock">⟳</string>
+
+    <!--controller string-->
+
 </resources>
