@@ -34,7 +34,7 @@ public class MapView extends View {
     private boolean touchRobot = false;
     private boolean touchWaypoint = false;
     private int[] robotPos = {0, 19};
-    private int robotOrientation = ORIENTATION_LEFT;
+    private int robotOrientation = ORIENTATION_UP;
 
 
     public MapView(Context context) {
@@ -104,6 +104,16 @@ public class MapView extends View {
     public void rotateRobotClock() {
         robotOrientation = (robotOrientation + 1) % 4;
         MapView.this.invalidate();
+    }
+
+    public void enableTouchWaypoint() {
+        touchEnabled = true;
+        touchWaypoint = true;
+    }
+
+    public void disableTouchWaypoint() {
+        touchEnabled = false;
+        touchWaypoint = false;
     }
 
     @Override
@@ -224,10 +234,10 @@ public class MapView extends View {
             } else if (touchWaypoint) {
                 for (int i = 0; i < 15; i++) {
                     for (int j = 0; j < 20; j++) {
-                        if (i == x && j == y) {
+                        if (i == x && j == y && tileStatus[i][j] == STATUS_EMPTY) {
                             tileStatus[i][j] = STATUS_SELECTED;
-                        } else {
-                            tileStatus[i][j] = STATUS_UNEXPLORED;
+                        } else if (tileStatus[i][j] == STATUS_SELECTED) {
+                            tileStatus[i][j] = STATUS_EMPTY;
                         }
                     }
                 }

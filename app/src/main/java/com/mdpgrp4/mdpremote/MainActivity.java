@@ -77,14 +77,28 @@ public class MainActivity extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 Button buttonRotateAnti = (Button) findViewById(R.id.buttonRotateAnti);
                 Button buttonRotateClock = (Button) findViewById(R.id.buttonRotateClock);
+                Button buttonExplore = (Button) findViewById(R.id.exploreButton);
                 if (isChecked) {
                     buttonRotateAnti.setEnabled(true);
                     buttonRotateClock.setEnabled(true);
+                    buttonExplore.setEnabled(false);
                     mapView.enableTouchRobot();
                 } else {
                     buttonRotateAnti.setEnabled(false);
                     buttonRotateClock.setEnabled(false);
+                    buttonExplore.setEnabled(true);
                     mapView.disableTouchRobot();
+                }
+            }
+        });
+
+        ToggleButton waypointToggle = (ToggleButton) findViewById(R.id.waypointToggle);
+        waypointToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    mapView.enableTouchWaypoint();
+                } else {
+                    mapView.disableTouchWaypoint();
                 }
             }
         });
@@ -183,6 +197,14 @@ public class MainActivity extends AppCompatActivity {
     public void explore(View view) {
         findViewById(R.id.waypointToggle).setEnabled(true);
         findViewById(R.id.fastestPathButton).setEnabled(true);
+        findViewById(R.id.robotToggle).setEnabled(false);
+        int[][] tileStatus = new int[15][20];
+        for (int x = 0; x < 15; x++) {
+            for (int y = 0; y < 20; y++) {
+                tileStatus[x][y] = MapView.STATUS_EMPTY;
+            }
+        }
+        mapView.setTileStatus(tileStatus);
     }
 
     private void openBtDialog() {
