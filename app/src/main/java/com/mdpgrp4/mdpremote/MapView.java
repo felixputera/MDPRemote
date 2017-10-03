@@ -250,8 +250,8 @@ public class MapView extends View {
             if (touchRobot) {
                 if (y <= 1) {
                     y = 1;
-                } else if (y >= 13) {
-                    y = 13;
+                } else if (y >= 18) {
+                    y = 18;
                 }
                 if (x <= 1) {
                     x = 1;
