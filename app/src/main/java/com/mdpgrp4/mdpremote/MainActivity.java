@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
 //            }
 //        }
 //        mapView.setTileStatus(tileStatus);
-/**
+
         ToggleButton robotToggle = (ToggleButton) findViewById(R.id.robotToggle);
         robotToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
                     mapView.disableTouchRobot();
                 }
             }
-        });**/
+        });
 
         ToggleButton waypointToggle = (ToggleButton) findViewById(R.id.waypointToggle);
         waypointToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {

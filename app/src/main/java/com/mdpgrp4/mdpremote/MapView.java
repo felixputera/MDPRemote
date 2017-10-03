@@ -224,7 +224,10 @@ public class MapView extends View {
         int obstacleIndex = 0;
         for (int i = 0; i < 300; i++) {
             if (explorationMapBin.charAt(i) == 1) {
-//                if ()
+//                if () {
+//
+//                }
+
             }
         }
     }
