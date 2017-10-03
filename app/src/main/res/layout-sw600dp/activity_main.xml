@@ -19,4 +19,83 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:layout_editor_absoluteX="-9dp" />
+
+    <ToggleButton
+        android:id="@+id/robotToggle"
+        android:layout_width="70sp"
+        android:layout_height="50sp"
+        android:layout_marginStart="120dp"
+        android:layout_marginTop="8dp"
+        android:textOff="@string/button_robot"
+        android:textOn="@string/button_robot_set"
+        android:textSize="12sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mapView"
+        tools:text="button_robot" />
+
+    <Button
+        android:id="@+id/buttonRotateAnti"
+        android:layout_width="50sp"
+        android:layout_height="50sp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="-8dp"
+        android:enabled="false"
+        android:onClick="rotateRobotAnti"
+        android:padding="0sp"
+        android:text="@string/button_rotate_anti"
+        app:layout_constraintLeft_toRightOf="@id/robotToggle"
+        app:layout_constraintTop_toTopOf="@id/robotToggle"
+        android:layout_marginLeft="9dp" />
+
+    <Button
+        android:id="@+id/buttonRotateClock"
+        android:layout_width="50sp"
+        android:layout_height="50sp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="0dp"
+        android:enabled="false"
+        android:onClick="rotateRobotClock"
+        android:padding="0sp"
+        android:text="@string/button_rotate_clock"
+        app:layout_constraintLeft_toRightOf="@id/buttonRotateAnti"
+        app:layout_constraintTop_toTopOf="@id/robotToggle"
+        android:layout_marginLeft="16dp" />
+
+    <ToggleButton
+        android:id="@+id/waypointToggle"
+        android:layout_width="150sp"
+        android:layout_height="50sp"
+        android:layout_marginEnd="120dp"
+        android:layout_marginTop="8dp"
+        android:enabled="false"
+        android:textOff="@string/button_waypoint"
+        android:textOn="@string/button_waypoint_set"
+        android:textSize="12sp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mapView" />
+
+    <Button
+        android:id="@+id/fastestPathButton"
+        android:layout_width="150sp"
+        android:layout_height="50sp"
+        android:layout_marginEnd="120dp"
+        android:layout_marginTop="8dp"
+        android:enabled="false"
+        android:text="@string/button_fastest_path"
+        android:textSize="12sp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/waypointToggle" />
+
+    <Button
+        android:id="@+id/exploreButton"
+        android:layout_width="150sp"
+        android:layout_height="50sp"
+        android:layout_marginStart="150dp"
+        android:layout_marginTop="8dp"
+        android:onClick="explore"
+        android:text="@string/button_explore"
+        android:textSize="12sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/robotToggle" />
+
 </android.support.constraint.ConstraintLayout>
