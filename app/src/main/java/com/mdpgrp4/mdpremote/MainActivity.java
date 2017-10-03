@@ -95,10 +95,13 @@ public class MainActivity extends AppCompatActivity {
         ToggleButton waypointToggle = (ToggleButton) findViewById(R.id.waypointToggle);
         waypointToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                Button fastestPathButton = (Button) findViewById(R.id.fastestPathButton);
                 if (isChecked) {
                     mapView.enableTouchWaypoint();
+                    fastestPathButton.setEnabled(false);
                 } else {
                     mapView.disableTouchWaypoint();
+                    fastestPathButton.setEnabled(true);
                 }
             }
         });

@@ -33,7 +33,7 @@ public class MapView extends View {
     private boolean touchEnabled = false;
     private boolean touchRobot = false;
     private boolean touchWaypoint = false;
-    private int[] robotPos = {0, 19};
+    private int[] robotPos = {1, 1};
     private int robotOrientation = ORIENTATION_UP;
 
 
@@ -126,7 +126,6 @@ public class MapView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-
         setRobotTile();
         for (int x = 0; x < 15; x++) {
             for (int y = 0; y < 20; y++) {
@@ -135,7 +134,7 @@ public class MapView extends View {
                 float right = left + xSize;
                 float bottom = top + ySize;
                 Paint tilePaint;
-                switch (tileStatus[x][y]) {
+                switch (tileStatus[x][19 - y]) {
                     case STATUS_UNEXPLORED:
                         tilePaint = mUnexploredPaint;
                         break;
@@ -174,26 +173,26 @@ public class MapView extends View {
     private void setRobotTile() {
         for (int i = 0; i < 15; i++) {
             for (int j = 0; j < 20; j++) {
-                if (i >= robotPos[0] && i <= robotPos[0] + 2 && j <= robotPos[1] && j >= robotPos[1] - 2) {
+                if (i >= robotPos[0] - 1 && i <= robotPos[0] + 1 && j <= robotPos[1] + 1 && j >= robotPos[1] - 1) {
                     tileStatus[i][j] = STATUS_ROBOT;
                     switch (robotOrientation) {
                         case ORIENTATION_UP:
-                            if (i == robotPos[0] + 1 && j == robotPos[1] - 2) {
+                            if (i == robotPos[0] && j == robotPos[1] + 1) {
                                 tileStatus[i][j] = STATUS_ROBOT_ORIENTATION;
                             }
                             break;
                         case ORIENTATION_RIGHT:
-                            if (i == robotPos[0] + 2 && j == robotPos[1] - 1) {
-                                tileStatus[i][j] = STATUS_ROBOT_ORIENTATION;
-                            }
-                            break;
-                        case ORIENTATION_DOWN:
                             if (i == robotPos[0] + 1 && j == robotPos[1]) {
                                 tileStatus[i][j] = STATUS_ROBOT_ORIENTATION;
                             }
                             break;
-                        case ORIENTATION_LEFT:
+                        case ORIENTATION_DOWN:
                             if (i == robotPos[0] && j == robotPos[1] - 1) {
+                                tileStatus[i][j] = STATUS_ROBOT_ORIENTATION;
+                            }
+                            break;
+                        case ORIENTATION_LEFT:
+                            if (i == robotPos[0] - 1 && j == robotPos[1]) {
                                 tileStatus[i][j] = STATUS_ROBOT_ORIENTATION;
                             }
                             break;
@@ -201,6 +200,31 @@ public class MapView extends View {
                 } else if (tileStatus[i][j] == STATUS_ROBOT || tileStatus[i][j] == STATUS_ROBOT_ORIENTATION) {
                     tileStatus[i][j] = STATUS_UNEXPLORED;
                 }
+            }
+        }
+    }
+
+    public void setMapDescriptor(String obstacleMapHex, String explorationMapHex) {
+        String explorationMapBin = String.format("%300s",
+                Integer.toBinaryString(Integer.parseInt(explorationMapHex, 16)).replace(' ', '0'));
+        if (explorationMapBin.length() == 304) {
+            explorationMapBin = explorationMapBin.substring(2, 302);
+        }
+
+        int obstacleMapHexLen = obstacleMapHex.length();
+        String obstacleMapBin = Integer.toBinaryString(Integer.parseInt(obstacleMapHex, 16));
+
+        int obstacleMapBinLen = obstacleMapBin.length();
+        if (obstacleMapBinLen < obstacleMapHexLen * 4) {
+            for (int i = 0; i < obstacleMapHexLen * 4 - obstacleMapBinLen; i++) {
+                obstacleMapBin = "0" + obstacleMapBin;
+            }
+        }
+
+        int obstacleIndex = 0;
+        for (int i = 0; i < 300; i++) {
+            if (explorationMapBin.charAt(i) == 1) {
+//                if ()
             }
         }
     }
@@ -221,20 +245,24 @@ public class MapView extends View {
             Log.d("y: ", String.valueOf(y));
 
             if (touchRobot) {
-                if (y <= 2) {
-                    y = 2;
+                if (y <= 1) {
+                    y = 1;
+                } else if (y >= 13) {
+                    x = 13;
                 }
-                if (x >= 12) {
-                    x = 12;
+                if (x <= 1) {
+                    x = 1;
+                } else if (x >= 13) {
+                    x = 13;
                 }
                 robotPos[0] = x;
-                robotPos[1] = y;
+                robotPos[1] = 19 - y;
 
                 MapView.this.invalidate();
             } else if (touchWaypoint) {
                 for (int i = 0; i < 15; i++) {
                     for (int j = 0; j < 20; j++) {
-                        if (i == x && j == y && tileStatus[i][j] == STATUS_EMPTY) {
+                        if (i == x && j == 19 - y && tileStatus[i][j] == STATUS_EMPTY) {
                             tileStatus[i][j] = STATUS_SELECTED;
                         } else if (tileStatus[i][j] == STATUS_SELECTED) {
                             tileStatus[i][j] = STATUS_EMPTY;
