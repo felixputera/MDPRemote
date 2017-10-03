@@ -29,8 +29,11 @@
             android:screenOrientation="landscape" />
 
         <service android:name=".BluetoothService" />
-
-        <activity android:name=".Controller"></activity>
+        <activity
+            android:name=".Controller"
+            android:label="@string/controller"
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

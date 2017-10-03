@@ -1,13 +1,12 @@
 package com.mdpgrp4.mdpremote;
 
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.widget.Button;
-import android.widget.TextView;
-import android.widget.EditText;
+import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 public class Controller extends AppCompatActivity {
@@ -20,8 +19,10 @@ public class Controller extends AppCompatActivity {
     private Button reverseBtn;
     private Button leftBtn;
     private Button rightBtn;
+    private Button saveBtn;
+    private Button loadBtn;
 
-    //Function
+    //EditText
     private EditText function_a_edit;
     private EditText function_b_edit;
 
@@ -33,12 +34,16 @@ public class Controller extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_controller);
-        load();
+        saveBtn = (Button) findViewById(R.id.saveBtn);
+        loadBtn =  (Button) findViewById(R.id.loadBtn);
+        function_a_edit = (EditText) findViewById(R.id.function_a_edit);
+        function_b_edit = (EditText) findViewById(R.id.function_b_edit);
+        load(findViewById(R.id.loadBtn));
+
     }
     public void save(View view) {
 
-        SharedPreferences sp = getSharedPreferences("MyData",
-                Context.MODE_PRIVATE);
+        SharedPreferences sp = getSharedPreferences("MyData", Context.MODE_PRIVATE);
         SharedPreferences.Editor editSP = sp.edit();
 
         editSP.putString("functionA", function_a_edit.getText().toString());
@@ -51,7 +56,7 @@ public class Controller extends AppCompatActivity {
     }
 
     //to load shared preferences
-    public void load(){
+    public void load(View view){
         SharedPreferences sp = getSharedPreferences("MyData", Context.MODE_PRIVATE);
         functionA = sp.getString("functionA", DEFAULT);
         functionB = sp.getString("functionB", DEFAULT);
