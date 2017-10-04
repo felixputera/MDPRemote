@@ -1,0 +1,62 @@
+package com.mdpgrp4.mdpremote;
+
+/**
+ * Created by felix on 9/30/2017.
+ */
+
+public class MessageEvent {
+
+    public static final int DISCONNECTED = 0;
+    public static final int CONNECTED = 1;
+    public static final int ROBOT_STATUS = 2;
+    public static final int ROBOT_POS = 3;
+    public static final int ROBOT_ORIENTATION = 4;
+    public static final int MAP = 5;
+    public static final int INVALID_JSON = 99;
+
+    public final int status;
+    public final String message;
+    public final int[] robotPosition;
+    public final int robotOrientation;
+    public final String[] map;
+
+    public MessageEvent(int status, String message) {
+        this.status = status;
+        this.message = message;
+        this.robotPosition = new int[2];
+        this.robotOrientation = 0;
+        this.map = new String[2];
+    }
+
+    public MessageEvent(int status) {
+        this.status = status;
+        this.message = "";
+        this.robotPosition = new int[2];
+        this.robotOrientation = 0;
+        this.map = new String[2];
+    }
+
+    public MessageEvent(int status, int robotOrientation) {
+        this.status = status;
+        this.message = "";
+        this.robotPosition = new int[2];
+        this.robotOrientation = robotOrientation;
+        this.map = new String[2];
+    }
+
+    public MessageEvent(int status, String[] map) {
+        this.status = status;
+        this.message = "";
+        this.robotPosition = new int[2];
+        this.robotOrientation = 0;
+        this.map = map;
+    }
+
+    public MessageEvent(int status, int[] robotPosition) {
+        this.status = status;
+        this.message = "";
+        this.robotPosition = robotPosition;
+        this.robotOrientation = 0;
+        this.map = new String[2];
+    }
+}

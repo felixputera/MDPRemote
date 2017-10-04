@@ -72,6 +72,8 @@ public class MainActivity extends AppCompatActivity {
 //        }
 //        mapView.setTileStatus(tileStatus);
 
+        mapView.setMapDescriptor("0000000000000000000000000000000000000000000000000000000000000000000000000ff",
+                "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0f");
         ToggleButton robotToggle = (ToggleButton) findViewById(R.id.robotToggle);
         robotToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -236,9 +238,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onBluetoothEvent(BluetoothEvent event) {
+    public void onBluetoothEvent(MessageEvent event) {
         switch (event.status) {
-            case BluetoothEvent.CONNECTED:
+            case MessageEvent.CONNECTED:
                 Toast.makeText(this, "Connected to device", Toast.LENGTH_SHORT).show();
                 if (btDialog.isVisible()) {
                     Log.d(TAG, "Dialog is visible");
@@ -247,14 +249,25 @@ public class MainActivity extends AppCompatActivity {
                 bluetoothConnected = true;
                 invalidateOptionsMenu();
                 break;
-            case BluetoothEvent.DISCONNECTED:
+            case MessageEvent.DISCONNECTED:
                 Toast.makeText(this, "Disconnected from device", Toast.LENGTH_SHORT).show();
                 bluetoothConnected = false;
                 invalidateOptionsMenu();
                 break;
-            case BluetoothEvent.MESSAGE_RECEIVED:
-                Toast.makeText(this, "Message: " + event.message, Toast.LENGTH_SHORT).show();
+            case MessageEvent.ROBOT_STATUS:
+                Toast.makeText(this, "Status: " + event.message, Toast.LENGTH_SHORT).show();
                 break;
+            case MessageEvent.ROBOT_POS:
+                mapView.setRobotPos(event.robotPosition);
+                break;
+            case MessageEvent.ROBOT_ORIENTATION:
+                mapView.setRobotOrientation(event.robotOrientation);
+                break;
+            case MessageEvent.MAP:
+                mapView.setMapDescriptor(event.map[0], event.map[1]);
+                break;
+            case MessageEvent.INVALID_JSON:
+                Toast.makeText(this, "Incoming message is not in valid JSON format", Toast.LENGTH_SHORT).show();
         }
     }
 }

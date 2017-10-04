@@ -8,8 +8,10 @@ import android.content.Intent;
 import android.os.Binder;
 import android.os.HandlerThread;
 import android.os.IBinder;
-import android.os.Looper;
 import android.util.Log;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -61,7 +63,7 @@ public class BluetoothService extends Service {
     public void disconnectBtSocket() {
         if (mConnectionThread != null) {
             mConnectionThread.cancel();
-            EventBus.getDefault().post(new BluetoothEvent(BluetoothEvent.DISCONNECTED));
+            EventBus.getDefault().post(new MessageEvent(MessageEvent.DISCONNECTED));
         }
     }
 
@@ -88,9 +90,7 @@ public class BluetoothService extends Service {
             HandlerThread handlerThread = new HandlerThread("MyHandlerThread");
             handlerThread.start();
 
-            Looper looper = handlerThread.getLooper();
-
-            EventBus.getDefault().post(new BluetoothEvent(BluetoothEvent.CONNECTED));
+            EventBus.getDefault().post(new MessageEvent(MessageEvent.CONNECTED));
 
             mBuffer = new byte[1024];
             int numBytes; // bytes returned from read()
@@ -99,14 +99,36 @@ public class BluetoothService extends Service {
                     // Read from the InputStream.
                     numBytes = mInStream.read(mBuffer);
                     String msg = new String(mBuffer);
-                    Log.d(TAG, "Message: " + msg.substring(0, numBytes));
+                    String jsonMessage = msg.substring(0, numBytes);
+                    Log.d(TAG, "Message: " + jsonMessage);
 
-                    // Send the obtained bytes to the UI activity.
-                    EventBus.getDefault().post(new BluetoothEvent(BluetoothEvent.MESSAGE_RECEIVED,
-                            msg.substring(0, numBytes)));
+                    try {
+                        // Send the obtained bytes to the UI activity.
+                        Gson gson = new Gson();
+                        IncomingMessage message = gson.fromJson(jsonMessage, IncomingMessage.class);
+
+                        if (message.robotStatus != null) {
+                            EventBus.getDefault().post(new MessageEvent(MessageEvent.ROBOT_STATUS,
+                                    message.robotStatus));
+                        }
+                        if (message.robotPosition != null) {
+                            EventBus.getDefault().post(new MessageEvent(MessageEvent.ROBOT_POS,
+                                    message.robotPosition));
+                        }
+                        if (message.robotOrientation != null) {
+                            EventBus.getDefault().post(new MessageEvent(MessageEvent.ROBOT_ORIENTATION,
+                                    message.robotOrientation));
+                        }
+                        if (message.mapObstacle != null) {
+                            EventBus.getDefault().post(new MessageEvent(MessageEvent.MAP,
+                                    new String[]{message.mapObstacle, message.mapExplored}));
+                        }
+                    } catch (JsonSyntaxException e) {
+                        EventBus.getDefault().post(new MessageEvent(MessageEvent.INVALID_JSON));
+                    }
                 } catch (IOException e) {
                     Log.d(TAG, "Input stream was disconnected", e);
-                    EventBus.getDefault().post(new BluetoothEvent(BluetoothEvent.DISCONNECTED));
+                    EventBus.getDefault().post(new MessageEvent(MessageEvent.DISCONNECTED));
                     // create bluetooth server thread after disconnection
                     mListenerThread = new BtListenerThread();
                     mListenerThread.start();
