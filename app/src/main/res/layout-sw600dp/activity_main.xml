@@ -9,93 +9,125 @@
 
     <com.mdpgrp4.mdpremote.MapView
         android:id="@+id/mapView"
-        android:layout_width="450dp"
-        android:layout_height="600dp"
-        android:layout_marginLeft="0dp"
-        android:layout_marginRight="0dp"
+        android:layout_width="420dp"
+        android:layout_height="560dp"
         android:layout_marginTop="15dp"
         app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteX="-9dp" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ToggleButton
         android:id="@+id/robotToggle"
-        android:layout_width="70sp"
-        android:layout_height="50sp"
-        android:layout_marginStart="120dp"
+        android:layout_width="88dp"
+        android:layout_height="50dp"
         android:layout_marginTop="8dp"
         android:textOff="@string/button_robot"
         android:textOn="@string/button_robot_set"
         android:textSize="12sp"
+        app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/buttonRotateAnti"
         app:layout_constraintTop_toBottomOf="@+id/mapView"
         tools:text="button_robot" />
 
     <Button
         android:id="@+id/buttonRotateAnti"
-        android:layout_width="50sp"
-        android:layout_height="50sp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="-8dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:enabled="false"
         android:onClick="rotateRobotAnti"
         android:padding="0sp"
         android:text="@string/button_rotate_anti"
-        app:layout_constraintLeft_toRightOf="@id/robotToggle"
-        app:layout_constraintTop_toTopOf="@id/robotToggle"
-        android:layout_marginLeft="9dp" />
+        app:layout_constraintBottom_toBottomOf="@+id/robotToggle"
+        app:layout_constraintLeft_toRightOf="@+id/robotToggle"
+        app:layout_constraintRight_toLeftOf="@+id/buttonRotateClock"
+        app:layout_constraintTop_toTopOf="@+id/robotToggle"
+        app:layout_constraintVertical_bias="1.0" />
 
     <Button
         android:id="@+id/buttonRotateClock"
-        android:layout_width="50sp"
-        android:layout_height="50sp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="0dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginRight="64dp"
         android:enabled="false"
         android:onClick="rotateRobotClock"
         android:padding="0sp"
         android:text="@string/button_rotate_clock"
-        app:layout_constraintLeft_toRightOf="@id/buttonRotateAnti"
-        app:layout_constraintTop_toTopOf="@id/robotToggle"
-        android:layout_marginLeft="16dp" />
+        app:layout_constraintBottom_toBottomOf="@+id/robotToggle"
+        app:layout_constraintLeft_toRightOf="@+id/buttonRotateAnti"
+        app:layout_constraintRight_toLeftOf="@+id/waypointToggle"
+        app:layout_constraintTop_toTopOf="@+id/robotToggle"
+        app:layout_constraintVertical_bias="0.0" />
 
     <ToggleButton
         android:id="@+id/waypointToggle"
-        android:layout_width="150sp"
-        android:layout_height="50sp"
-        android:layout_marginEnd="120dp"
-        android:layout_marginTop="8dp"
+        android:layout_width="150dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="0dp"
+        android:layout_marginTop="0dp"
         android:enabled="false"
         android:textOff="@string/button_waypoint"
         android:textOn="@string/button_waypoint_set"
         android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/robotToggle"
+        app:layout_constraintLeft_toRightOf="@+id/buttonRotateClock"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mapView" />
+        app:layout_constraintTop_toTopOf="@+id/robotToggle" />
 
     <Button
         android:id="@+id/fastestPathButton"
-        android:layout_width="150sp"
-        android:layout_height="50sp"
-        android:layout_marginEnd="120dp"
-        android:layout_marginTop="8dp"
+        android:layout_width="150dp"
+        android:layout_height="50dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
         android:enabled="false"
         android:text="@string/button_fastest_path"
         android:textSize="12sp"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/waypointToggle" />
+        app:layout_constraintBottom_toBottomOf="@+id/exploreButton"
+        app:layout_constraintLeft_toRightOf="@+id/exploreButton"
+        app:layout_constraintRight_toRightOf="@+id/waypointToggle"
+        app:layout_constraintTop_toTopOf="@+id/exploreButton"
+        app:layout_constraintVertical_bias="0.0" />
 
     <Button
         android:id="@+id/exploreButton"
-        android:layout_width="150sp"
-        android:layout_height="50sp"
-        android:layout_marginStart="150dp"
+        android:layout_width="150dp"
+        android:layout_height="50dp"
+        android:layout_marginLeft="0dp"
         android:layout_marginTop="8dp"
         android:onClick="explore"
         android:text="@string/button_explore"
         android:textSize="12sp"
-        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
+        app:layout_constraintLeft_toLeftOf="@+id/robotToggle"
+        app:layout_constraintRight_toLeftOf="@+id/fastestPathButton"
         app:layout_constraintTop_toBottomOf="@+id/robotToggle" />
+
+    <TextView
+        android:id="@+id/statusLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/status_label"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/statusTextView"
+        app:layout_constraintTop_toBottomOf="@+id/exploreButton" />
+
+    <TextView
+        android:id="@+id/statusTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="4dp"
+        android:layout_marginRight="4dp"
+        android:text="@string/status_view"
+        app:layout_constraintBottom_toBottomOf="@+id/statusLabel"
+        app:layout_constraintLeft_toRightOf="@+id/statusLabel"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/statusLabel"
+        app:layout_constraintVertical_bias="0.0" />
 
 </android.support.constraint.ConstraintLayout>

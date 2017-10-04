@@ -19,7 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
@@ -41,7 +41,9 @@ public class MainActivity extends AppCompatActivity {
     private DialogFragment btDialog;
     private boolean bluetoothIsStarted = false;
     private boolean bluetoothConnected = false;
-    private ImageButton buttonRight, buttonLeft;
+    private TextView statusView;
+    private Button buttonExplore;
+    private ToggleButton robotToggle;
 
     private ServiceConnection mConnection = new ServiceConnection() {
         @Override
@@ -62,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        statusView = (TextView) findViewById(R.id.statusTextView);
         mapView = (MapView) findViewById(R.id.mapView);
 
 //        int[][] tileStatus = new int[15][20];
@@ -72,14 +75,12 @@ public class MainActivity extends AppCompatActivity {
 //        }
 //        mapView.setTileStatus(tileStatus);
 
-        mapView.setMapDescriptor("0000000000000000000000000000000000000000000000000000000000000000000000000ff",
-                "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0f");
-        ToggleButton robotToggle = (ToggleButton) findViewById(R.id.robotToggle);
+        buttonExplore = (Button) findViewById(R.id.exploreButton);
+        robotToggle = (ToggleButton) findViewById(R.id.robotToggle);
         robotToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 Button buttonRotateAnti = (Button) findViewById(R.id.buttonRotateAnti);
                 Button buttonRotateClock = (Button) findViewById(R.id.buttonRotateClock);
-                Button buttonExplore = (Button) findViewById(R.id.exploreButton);
                 if (isChecked) {
                     buttonRotateAnti.setEnabled(true);
                     buttonRotateClock.setEnabled(true);
@@ -155,7 +156,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(tilt_steering_intent);
                 return true;
             case R.id.controller:
-                Intent controller = new Intent(this, Controller.class);
+                Intent controller = new Intent(this, ControllerActivity.class);
                 startActivity(controller);
                 return true;
             case R.id.action_bluetooth_connect:
@@ -207,13 +208,14 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.waypointToggle).setEnabled(true);
         findViewById(R.id.fastestPathButton).setEnabled(true);
         findViewById(R.id.robotToggle).setEnabled(false);
-        int[][] tileStatus = new int[15][20];
-        for (int x = 0; x < 15; x++) {
-            for (int y = 0; y < 20; y++) {
-                tileStatus[x][y] = MapView.STATUS_EMPTY;
-            }
-        }
-        mapView.setTileStatus(tileStatus);
+//        int[][] tileStatus = new int[15][20];
+//        for (int x = 0; x < 15; x++) {
+//            for (int y = 0; y < 20; y++) {
+//                tileStatus[x][y] = MapView.STATUS_EMPTY;
+//            }
+//        }
+//        mapView.setTileStatus(tileStatus);
+        mService.writeBtOut("beginExploration");
     }
 
     private void openBtDialog() {
@@ -248,17 +250,19 @@ public class MainActivity extends AppCompatActivity {
                 }
                 bluetoothConnected = true;
                 invalidateOptionsMenu();
+                statusView.setText("Connected");
                 break;
             case MessageEvent.DISCONNECTED:
                 Toast.makeText(this, "Disconnected from device", Toast.LENGTH_SHORT).show();
                 bluetoothConnected = false;
                 invalidateOptionsMenu();
+                statusView.setText("Disconnected");
                 break;
             case MessageEvent.ROBOT_STATUS:
-                Toast.makeText(this, "Status: " + event.message, Toast.LENGTH_SHORT).show();
+                statusView.setText(event.message);
                 break;
             case MessageEvent.ROBOT_POS:
-                mapView.setRobotPos(event.robotPosition);
+                mapView.setRobotPos(event.coordinates);
                 break;
             case MessageEvent.ROBOT_ORIENTATION:
                 mapView.setRobotOrientation(event.robotOrientation);

@@ -16,14 +16,14 @@ public class MessageEvent {
 
     public final int status;
     public final String message;
-    public final int[] robotPosition;
+    public final int[] coordinates;
     public final int robotOrientation;
     public final String[] map;
 
     public MessageEvent(int status, String message) {
         this.status = status;
         this.message = message;
-        this.robotPosition = new int[2];
+        this.coordinates = new int[2];
         this.robotOrientation = 0;
         this.map = new String[2];
     }
@@ -31,7 +31,7 @@ public class MessageEvent {
     public MessageEvent(int status) {
         this.status = status;
         this.message = "";
-        this.robotPosition = new int[2];
+        this.coordinates = new int[2];
         this.robotOrientation = 0;
         this.map = new String[2];
     }
@@ -39,7 +39,7 @@ public class MessageEvent {
     public MessageEvent(int status, int robotOrientation) {
         this.status = status;
         this.message = "";
-        this.robotPosition = new int[2];
+        this.coordinates = new int[2];
         this.robotOrientation = robotOrientation;
         this.map = new String[2];
     }
@@ -47,15 +47,15 @@ public class MessageEvent {
     public MessageEvent(int status, String[] map) {
         this.status = status;
         this.message = "";
-        this.robotPosition = new int[2];
+        this.coordinates = new int[2];
         this.robotOrientation = 0;
         this.map = map;
     }
 
-    public MessageEvent(int status, int[] robotPosition) {
+    public MessageEvent(int status, int[] coordinates) {
         this.status = status;
         this.message = "";
-        this.robotPosition = robotPosition;
+        this.coordinates = coordinates;
         this.robotOrientation = 0;
         this.map = new String[2];
     }

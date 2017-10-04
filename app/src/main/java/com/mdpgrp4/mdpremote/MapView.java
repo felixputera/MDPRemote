@@ -361,8 +361,8 @@ public class MapView extends View {
                 } else if (x >= 13) {
                     x = 13;
                 }
-                robotPos[0] = x;
-                robotPos[1] = 19 - y;
+                robotPos[1] = x;
+                robotPos[0] = 19 - y;
 
                 MapView.this.invalidate();
             } else if (touchWaypoint) {

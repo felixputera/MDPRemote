@@ -31,17 +31,21 @@
     <string name="button_rotate_anti">↺</string>
     <string name="button_rotate_clock">↻</string>
 
+    <!--robot status-->
+    <string name="status_label">Robot status:</string>
+    <string name="status_view">Disconnected</string>
+
     <!--controller strings-->
-    <string name="ctrReverse">▼</string>
-    <string name="ctrLeft">◀</string>
-    <string name="ctrRight">▶</string>
-    <string name="ctrForward">▲</string>
-    <string name="function_a_btn">function a</string>
-    <string name="function_b_btn">function b</string>
-    <string name="function_a_string">function a:</string>
-    <string name="function_b_string">function b:</string>
-    <string name="save">save</string>
-    <string name="load">load</string>
+    <string name="ctrReverse">↓</string>
+    <string name="ctrLeft">←</string>
+    <string name="ctrRight">→</string>
+    <string name="ctrForward">↑</string>
+    <string name="function_a_btn">Function A</string>
+    <string name="function_b_btn">Function B</string>
+    <string name="function_a_string">Function A:</string>
+    <string name="function_b_string">Function B:</string>
+    <string name="save">Save</string>
+    <string name="load">Load</string>
 
 
 </resources>

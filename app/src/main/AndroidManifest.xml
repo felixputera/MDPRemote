@@ -30,7 +30,7 @@
 
         <service android:name=".BluetoothService" />
         <activity
-            android:name=".Controller"
+            android:name=".ControllerActivity"
             android:label="@string/controller"
             android:parentActivityName=".MainActivity"
             android:screenOrientation="portrait" />
