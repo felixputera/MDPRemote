@@ -235,7 +235,7 @@ public class MainActivity extends AppCompatActivity {
         ft.addToBackStack(null);
 
         // finally, show dialog
-        btDialog = BtDialogFragment.newInstance(bluetoothHelper.getBluetoothAdapter());
+        btDialog = BtDialogFragment.newInstance(bluetoothHelper.getBluetoothAdapter(), mService);
         btDialog.show(ft, "btDialog");
     }
 
@@ -269,6 +269,12 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case MessageEvent.MAP:
                 mapView.setMapDescriptor(event.map[0], event.map[1]);
+                break;
+            case MessageEvent.CONNECT_DEVICE:
+                mService.connectDevice(event.device);
+                break;
+            case MessageEvent.CONNECT_FAIL:
+                Toast.makeText(this, "Failed to connect to device", Toast.LENGTH_SHORT).show();
                 break;
             case MessageEvent.INVALID_JSON:
                 Toast.makeText(this, "Incoming message is not in valid JSON format", Toast.LENGTH_SHORT).show();

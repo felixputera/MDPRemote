@@ -1,5 +1,6 @@
 package com.mdpgrp4.mdpremote.BluetoothDialog;
 
+import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.v4.view.GestureDetectorCompat;
@@ -10,16 +11,20 @@ import android.view.MotionEvent;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.mdpgrp4.mdpremote.BluetoothService;
+import com.mdpgrp4.mdpremote.MessageEvent;
 import com.mdpgrp4.mdpremote.R;
+
+import org.greenrobot.eventbus.EventBus;
 
 /**
  * Created by felix on 9/12/2017.
  */
 
 class DeviceView extends LinearLayout {
-    private String deviceAddress;
-    private String deviceName;
     private GestureDetectorCompat detector;
+    private BluetoothDevice device;
+    private BluetoothService btService;
 
     public DeviceView(Context context) {
         super(context);
@@ -42,13 +47,16 @@ class DeviceView extends LinearLayout {
         detector = new GestureDetectorCompat(getContext(), new GestureTap());
     }
 
-    public void setDeviceValues(String dAddress, String dName) {
-        deviceAddress = dAddress;
-        deviceName = dName;
-        TextView deviceNameView = (TextView) findViewById(R.id.deviceName);
-        TextView deviceMacView = (TextView) findViewById(R.id.deviceMac);
-        deviceNameView.setText(deviceName);
-        deviceMacView.setText(deviceAddress);
+    public void setDevice(BluetoothDevice device) {
+        this.device = device;
+        TextView deviceNameView = findViewById(R.id.deviceName);
+        TextView deviceMacView = findViewById(R.id.deviceMac);
+        deviceNameView.setText(device.getName());
+        deviceMacView.setText(device.getAddress());
+    }
+
+    public void setBtService(BluetoothService btService) {
+        this.btService = btService;
     }
 
     @Override
@@ -59,8 +67,9 @@ class DeviceView extends LinearLayout {
 
     private class GestureTap extends GestureDetector.SimpleOnGestureListener {
         @Override
-        public boolean onDown(MotionEvent e) {
-            Log.d("MAC: ", deviceAddress);
+        public boolean onSingleTapConfirmed(MotionEvent e) {
+            Log.d("MAC: ", device.getAddress());
+            EventBus.getDefault().post(new MessageEvent(MessageEvent.CONNECT_DEVICE, device));
             return true;
         }
     }

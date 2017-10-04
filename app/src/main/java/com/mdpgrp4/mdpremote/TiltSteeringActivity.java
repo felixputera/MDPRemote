@@ -1,5 +1,6 @@
 package com.mdpgrp4.mdpremote;
 
+import android.content.DialogInterface;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -52,6 +53,13 @@ public class TiltSteeringActivity extends AppCompatActivity implements SensorEve
     private void displayDialog() {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(TiltSteeringActivity.this);
         dialogBuilder.setMessage("Hold your phone in landscape. Press OK to set current sensor readings as baseline.");
+        dialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+        dialogBuilder.setCancelable(false);
         AlertDialog alertDialog = dialogBuilder.create();
         alertDialog.show();
     }
