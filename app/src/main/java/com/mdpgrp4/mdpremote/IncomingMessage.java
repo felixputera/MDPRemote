@@ -10,13 +10,15 @@ public class IncomingMessage {
     public final Integer robotOrientation;
     public final String mapObstacle;
     public final String mapExplored;
+    public final String grid;
 
     public IncomingMessage(String robotStatus, int[] robotPosition, Integer robotOrientation,
-                           String mapObstacle, String mapExplored) {
+                           String mapObstacle, String mapExplored, String grid) {
         this.robotStatus = robotStatus;
         this.robotPosition = robotPosition;
         this.robotOrientation = robotOrientation;
         this.mapObstacle = mapObstacle;
         this.mapExplored = mapExplored;
+        this.grid = grid;
     }
 }
