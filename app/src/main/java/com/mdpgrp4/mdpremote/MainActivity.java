@@ -44,6 +44,9 @@ public class MainActivity extends AppCompatActivity {
     private TextView statusView;
     private Button buttonExplore;
     private ToggleButton robotToggle;
+    private boolean mapAuto = true;
+    private String[] mapBuffer = new String[2];
+    private int[] robotPosBuffer = new int[3];
 
     private ServiceConnection mConnection = new ServiceConnection() {
         @Override
@@ -95,6 +98,21 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        ToggleButton mapToggle = (ToggleButton) findViewById(R.id.mapToggle);
+        mapToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                Button buttonRefreshMap = (Button) findViewById(R.id.refreshMapButton);
+                if (isChecked) {
+                    buttonRefreshMap.setEnabled(true);
+                    mapAuto = false;
+                } else {
+                    buttonRefreshMap.setEnabled(false);
+                    mapAuto = true;
+                }
+            }
+        });
+
         ToggleButton waypointToggle = (ToggleButton) findViewById(R.id.waypointToggle);
         waypointToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -103,7 +121,10 @@ public class MainActivity extends AppCompatActivity {
                     mapView.enableTouchWaypoint();
                     fastestPathButton.setEnabled(false);
                 } else {
-                    mapView.disableTouchWaypoint();
+                    int[] waypoint = mapView.disableTouchWaypoint();
+                    if (mBound) {
+                        mService.writeBtOut("waypoint(" + waypoint[0] + "," + waypoint[1] + ")");
+                    }
                     fastestPathButton.setEnabled(true);
                 }
             }
@@ -204,6 +225,11 @@ public class MainActivity extends AppCompatActivity {
         mapView.rotateRobotClock();
     }
 
+    public void mapRefresh(View view) {
+        mapView.setMapDescriptor(mapBuffer[0], mapBuffer[1]);
+        mapView.setRobotPos(robotPosBuffer);
+    }
+
     public void explore(View view) {
         findViewById(R.id.waypointToggle).setEnabled(true);
         findViewById(R.id.fastestPathButton).setEnabled(true);
@@ -215,7 +241,9 @@ public class MainActivity extends AppCompatActivity {
 //            }
 //        }
 //        mapView.setTileStatus(tileStatus);
-        mService.writeBtOut("beginExploration");
+        if (mBound) {
+            mService.writeBtOut("beginExploration");
+        }
     }
 
     private void openBtDialog() {
@@ -262,13 +290,20 @@ public class MainActivity extends AppCompatActivity {
                 statusView.setText(event.message);
                 break;
             case MessageEvent.ROBOT_POS:
-                mapView.setRobotPos(event.coordinates);
-                break;
-            case MessageEvent.ROBOT_ORIENTATION:
-                mapView.setRobotOrientation(event.robotOrientation);
+                if (mapAuto) {
+                    mapView.setRobotPos(event.coordinates);
+                }
+                robotPosBuffer[0] = event.coordinates[0];
+                robotPosBuffer[1] = event.coordinates[1];
+                robotPosBuffer[2] = event.coordinates[2];
+
                 break;
             case MessageEvent.MAP:
-                mapView.setMapDescriptor(event.map[0], event.map[1]);
+                if (mapAuto) {
+                    mapView.setMapDescriptor(event.map[0], event.map[1]);
+                }
+                mapBuffer[0] = event.map[0];
+                mapBuffer[1] = event.map[1];
                 break;
             case MessageEvent.CONNECT_DEVICE:
                 mService.connectDevice(event.device);

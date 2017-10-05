@@ -24,9 +24,9 @@ public class MapView extends View {
     public static final int STATUS_ROBOT_ORIENTATION = 5;
 
     public static final int ORIENTATION_UP = 0;
-    public static final int ORIENTATION_RIGHT = 1;
-    public static final int ORIENTATION_DOWN = 2;
-    public static final int ORIENTATION_LEFT = 3;
+    public static final int ORIENTATION_RIGHT = 90;
+    public static final int ORIENTATION_DOWN = 180;
+    public static final int ORIENTATION_LEFT = 270;
 
     private static final int TILE_MARGIN = 5;
     private int[][] tileStatus; //x, y format
@@ -38,8 +38,8 @@ public class MapView extends View {
     private boolean touchEnabled = false;
     private boolean touchRobot = false;
     private boolean touchWaypoint = false;
-    private int[] robotPos = {1, 1}; //y, x format (column, row)
-    private int robotOrientation = ORIENTATION_UP;
+    private int[] waypoint = new int[2];
+    private int[] robotPos = {1, 1, ORIENTATION_UP}; //y, x, orientation format (column, row, orientation)
 
 
     public MapView(Context context) {
@@ -166,12 +166,12 @@ public class MapView extends View {
     }
 
     public void rotateRobotAnti() {
-        robotOrientation = (robotOrientation + 3) % 4;
+        robotPos[2] = (robotPos[2] + 270) % 360;
         MapView.this.invalidate();
     }
 
     public void rotateRobotClock() {
-        robotOrientation = (robotOrientation + 1) % 4;
+        robotPos[2] = (robotPos[2] + 90) % 360;
         MapView.this.invalidate();
     }
 
@@ -180,9 +180,10 @@ public class MapView extends View {
         touchWaypoint = true;
     }
 
-    public void disableTouchWaypoint() {
+    public int[] disableTouchWaypoint() {
         touchEnabled = false;
         touchWaypoint = false;
+        return waypoint;
     }
 
     @Override
@@ -265,7 +266,7 @@ public class MapView extends View {
             for (int j = 0; j < 20; j++) {
                 if (i >= robotPos[1] - 1 && i <= robotPos[1] + 1 && j <= robotPos[0] + 1 && j >= robotPos[0] - 1) {
                     tileRobot[i][j] = STATUS_ROBOT;
-                    switch (robotOrientation) {
+                    switch (robotPos[2]) {
                         case ORIENTATION_UP:
                             if (i == robotPos[1] && j == robotPos[0] + 1) {
                                 tileRobot[i][j] = STATUS_ROBOT_ORIENTATION;
@@ -295,6 +296,9 @@ public class MapView extends View {
     }
 
     public void setMapDescriptor(String obstacleMapHex, String explorationMapHex) {
+        if (obstacleMapHex == null) {
+            obstacleMapHex = "000000000000000000000000000000000000000000000000000000000000000000000000000";
+        }
         if (explorationMapHex == null) {
             explorationMapHex = "fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff";
         }
@@ -327,11 +331,7 @@ public class MapView extends View {
     public void setRobotPos(int[] robotPos) {
         this.robotPos[0] = robotPos[0];
         this.robotPos[1] = robotPos[1];
-        MapView.this.invalidate();
-    }
-
-    public void setRobotOrientation(int robotOrientation) {
-        this.robotOrientation = robotOrientation;
+        this.robotPos[2] = robotPos[2];
         MapView.this.invalidate();
     }
 
@@ -370,6 +370,8 @@ public class MapView extends View {
                     for (int j = 0; j < 20; j++) {
                         if (i == x && j == 19 - y && tileStatus[i][j] == STATUS_EMPTY) {
                             tileStatus[i][j] = STATUS_SELECTED;
+                            waypoint[0] = j;
+                            waypoint[1] = i;
                         } else if (tileStatus[i][j] == STATUS_SELECTED) {
                             tileStatus[i][j] = STATUS_EMPTY;
                         }

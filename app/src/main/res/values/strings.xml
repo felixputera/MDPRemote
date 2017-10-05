@@ -31,6 +31,11 @@
     <string name="button_rotate_anti">↺</string>
     <string name="button_rotate_clock">↻</string>
 
+    <string name="map_update_label">Map update</string>
+    <string name="map_update_auto">Automatic</string>
+    <string name="map_update_manual">Manual</string>
+    <string name="map_update_refresh">Refresh</string>
+
     <!--robot status-->
     <string name="status_label">Robot status:</string>
     <string name="status_view">Disconnected</string>

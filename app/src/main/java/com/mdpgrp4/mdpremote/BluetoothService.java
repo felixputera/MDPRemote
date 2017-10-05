@@ -72,7 +72,7 @@ public class BluetoothService extends Service {
     }
 
     public void writeBtOut(String data) {
-        if (mConnectionThread != null) {
+        if (mConnectionThread != null && mConnectionThread.isAlive()) {
             mConnectionThread.write(data.getBytes());
         }
     }
@@ -129,10 +129,6 @@ public class BluetoothService extends Service {
                         if (message.robotPosition != null) {
                             EventBus.getDefault().post(new MessageEvent(MessageEvent.ROBOT_POS,
                                     message.robotPosition));
-                        }
-                        if (message.robotOrientation != null) {
-                            EventBus.getDefault().post(new MessageEvent(MessageEvent.ROBOT_ORIENTATION,
-                                    message.robotOrientation));
                         }
                         if (message.mapObstacle != null) {
                             EventBus.getDefault().post(new MessageEvent(MessageEvent.MAP,

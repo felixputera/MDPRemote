@@ -19,7 +19,7 @@
 
     <ToggleButton
         android:id="@+id/robotToggle"
-        android:layout_width="88dp"
+        android:layout_width="80dp"
         android:layout_height="50dp"
         android:layout_marginTop="8dp"
         android:textOff="@string/button_robot"
@@ -49,6 +49,7 @@
         android:id="@+id/buttonRotateClock"
         android:layout_width="50dp"
         android:layout_height="50dp"
+        android:layout_marginEnd="64dp"
         android:layout_marginRight="64dp"
         android:enabled="false"
         android:onClick="rotateRobotClock"
@@ -64,8 +65,6 @@
         android:id="@+id/waypointToggle"
         android:layout_width="150dp"
         android:layout_height="50dp"
-        android:layout_marginBottom="0dp"
-        android:layout_marginTop="0dp"
         android:enabled="false"
         android:textOff="@string/button_waypoint"
         android:textOn="@string/button_waypoint_set"
@@ -79,8 +78,6 @@
         android:id="@+id/fastestPathButton"
         android:layout_width="150dp"
         android:layout_height="50dp"
-        android:layout_marginLeft="0dp"
-        android:layout_marginRight="0dp"
         android:enabled="false"
         android:text="@string/button_fastest_path"
         android:textSize="12sp"
@@ -94,8 +91,7 @@
         android:id="@+id/exploreButton"
         android:layout_width="150dp"
         android:layout_height="50dp"
-        android:layout_marginLeft="0dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="10dp"
         android:onClick="explore"
         android:text="@string/button_explore"
         android:textSize="12sp"
@@ -103,6 +99,46 @@
         app:layout_constraintLeft_toLeftOf="@+id/robotToggle"
         app:layout_constraintRight_toLeftOf="@+id/fastestPathButton"
         app:layout_constraintTop_toBottomOf="@+id/robotToggle" />
+
+    <TextView
+        android:id="@+id/mapUpdateLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="16dp"
+        android:text="@string/map_update_label"
+        app:layout_constraintBaseline_toBaselineOf="@+id/mapToggle"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/mapToggle" />
+
+    <ToggleButton
+        android:id="@+id/mapToggle"
+        style="@style/Base.Widget.AppCompat.Button.Borderless"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="8dp"
+        android:textOff="@string/map_update_auto"
+        android:textOn="@string/map_update_manual"
+        android:textSize="12sp"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintLeft_toRightOf="@+id/mapUpdateLabel"
+        app:layout_constraintRight_toLeftOf="@+id/refreshMapButton"
+        app:layout_constraintTop_toBottomOf="@+id/exploreButton" />
+
+    <Button
+        android:id="@+id/refreshMapButton"
+        style="@style/Base.Widget.AppCompat.Button.Borderless"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:enabled="false"
+        android:onClick="mapRefresh"
+        android:text="@string/map_update_refresh"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/mapToggle"
+        app:layout_constraintLeft_toRightOf="@+id/mapToggle"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/mapToggle"
+        app:layout_constraintVertical_bias="1.0" />
 
     <TextView
         android:id="@+id/statusLabel"
@@ -115,7 +151,7 @@
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/statusTextView"
-        app:layout_constraintTop_toBottomOf="@+id/exploreButton" />
+        app:layout_constraintTop_toBottomOf="@+id/mapToggle" />
 
     <TextView
         android:id="@+id/statusTextView"

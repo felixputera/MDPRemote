@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.greenrobot.eventbus.EventBus;
@@ -37,6 +38,9 @@ public class ControllerActivity extends AppCompatActivity {
     //EditText
     private EditText functionAEdit;
     private EditText functionBEdit;
+
+    private TextView statusView;
+
     private ServiceConnection mConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
@@ -55,6 +59,8 @@ public class ControllerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_controller);
+
+        statusView = (TextView) findViewById(R.id.statusTextView);
 
         functionASave = (Button) findViewById(R.id.functionASave);
         functionBSave = (Button) findViewById(R.id.functionBSave);
@@ -104,6 +110,7 @@ public class ControllerActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if (mBound) {
                     mService.writeBtOut("f");
+                    statusView.setText("Moving forward");
                 }
             }
         });
@@ -112,6 +119,7 @@ public class ControllerActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if (mBound) {
                     mService.writeBtOut("r");
+                    statusView.setText("Reversing");
                 }
             }
         });
@@ -120,6 +128,7 @@ public class ControllerActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if (mBound) {
                     mService.writeBtOut("tl");
+                    statusView.setText("Turning left");
                 }
             }
         });
@@ -128,6 +137,7 @@ public class ControllerActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if (mBound) {
                     mService.writeBtOut("tr");
+                    statusView.setText("Turning right");
                 }
             }
         });
@@ -186,7 +196,7 @@ public class ControllerActivity extends AppCompatActivity {
                 finish();
                 break;
             case MessageEvent.ROBOT_STATUS:
-                Toast.makeText(this, event.message, Toast.LENGTH_SHORT).show();
+                statusView.setText(event.message);
                 break;
         }
     }
