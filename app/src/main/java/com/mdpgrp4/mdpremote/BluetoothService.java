@@ -138,7 +138,12 @@ public class BluetoothService extends Service {
                             EventBus.getDefault().post(new MessageEvent(MessageEvent.MAP,
                                     new String[]{message.mapObstacle, message.mapExplored}));
                         }
-                    } catch (JsonSyntaxException e) {
+                        if (message.grid != null) {
+                            EventBus.getDefault().post(new MessageEvent(MessageEvent.MAP,
+                                    new String[]{message.grid, message.mapExplored}));
+                        }
+                    }
+                    catch (JsonSyntaxException e) {
                         EventBus.getDefault().post(new MessageEvent(MessageEvent.INVALID_JSON));
                     }
                 } catch (IOException e) {
