@@ -6,12 +6,12 @@ package com.mdpgrp4.mdpremote;
 
 public class IncomingMessage {
     public final String robotStatus;
-    public final int[] robotPosition;
+    public final String[] robotPosition;
     public final String mapObstacle;
     public final String mapExplored;
     public final String grid;
 
-    public IncomingMessage(String robotStatus, int[] robotPosition,
+    public IncomingMessage(String robotStatus, String[] robotPosition,
                            String mapObstacle, String mapExplored, String grid) {
         this.robotStatus = robotStatus;
         this.robotPosition = robotPosition;

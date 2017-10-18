@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
     private ToggleButton robotToggle;
     private boolean mapAuto = true;
     private String[] mapBuffer = new String[2];
-    private int[] robotPosBuffer = new int[3];
+    private String[] robotPosBuffer = {"1", "1", "N"};
 
     private ServiceConnection mConnection = new ServiceConnection() {
         @Override
@@ -123,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     int[] waypoint = mapView.disableTouchWaypoint();
                     if (mBound) {
-                        mService.writeBtOut("waypoint(" + waypoint[0] + "," + waypoint[1] + ")");
+                        mService.writeBtOut("pcwaypoint," + waypoint[0] + "," + waypoint[1]);
                     }
                     fastestPathButton.setEnabled(true);
                 }
@@ -242,7 +242,7 @@ public class MainActivity extends AppCompatActivity {
 //        }
 //        mapView.setTileStatus(tileStatus);
         if (mBound) {
-            mService.writeBtOut("beginExploration");
+            mService.writeBtOut("pcbeginExploration");
         }
     }
 

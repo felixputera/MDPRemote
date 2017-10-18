@@ -20,15 +20,13 @@ import android.widget.TextView;
 import com.mdpgrp4.mdpremote.BluetoothService;
 import com.mdpgrp4.mdpremote.R;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by felix on 9/10/2017.
  */
 
 public class BtDialogFragment extends DialogFragment {
-    private Map<String, String> deviceMap = new HashMap<>();
     private BluetoothAdapter btAdapter;
     private BluetoothService btService;
     private View mView;
@@ -37,19 +35,15 @@ public class BtDialogFragment extends DialogFragment {
         public void onReceive(Context context, Intent intent) {
             final String action = intent.getAction();
             ProgressBar scanProgress = mView.findViewById(R.id.progressScanning);
-            LinearLayout deviceLayout = mView.findViewById(R.id.deviceLayout);
             Button scanButton = mView.findViewById(R.id.buttonDialogScan);
             if (BluetoothDevice.ACTION_FOUND.equals(action)) {
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                DeviceView deviceView = new DeviceView(context);
-                deviceView.setDevice(device);
-                deviceView.setBtService(btService);
-                deviceLayout.addView(deviceView);
-                deviceLayout.invalidate();
-                deviceMap.put(device.getAddress(), device.getName());
+                addDeviceToView(device);
 //                Log.d("Device found: ", device.getName());
             } else if (BluetoothAdapter.ACTION_DISCOVERY_STARTED.equals(action)) {
+                LinearLayout deviceLayout = mView.findViewById(R.id.deviceLayout);
                 deviceLayout.removeAllViews();
+                initPairedDeviceView();
                 scanProgress.setVisibility(View.VISIBLE);
                 scanButton.setText(R.string.bt_dialog_stop_scan);
             } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
@@ -80,6 +74,27 @@ public class BtDialogFragment extends DialogFragment {
         return btDialog;
     }
 
+    private void addDeviceToView(BluetoothDevice device) {
+        LinearLayout deviceLayout = mView.findViewById(R.id.deviceLayout);
+        DeviceView deviceView = new DeviceView(getActivity());
+        deviceView.setDevice(device);
+        deviceView.setBtService(btService);
+        deviceLayout.addView(deviceView);
+        deviceLayout.invalidate();
+    }
+
+    private void initPairedDeviceView() {
+        Set<BluetoothDevice> pairedDevices = btAdapter.getBondedDevices();
+
+        if (pairedDevices.size() > 0) {
+            // There are paired devices. Get the name and address of each paired device.
+            for (BluetoothDevice device : pairedDevices) {
+                addDeviceToView(device);
+            }
+        }
+
+    }
+
     private void setBtAdapter(BluetoothAdapter btAdapter) {
         this.btAdapter = btAdapter;
     }
@@ -99,8 +114,6 @@ public class BtDialogFragment extends DialogFragment {
         filter.addAction(BluetoothAdapter.ACTION_SCAN_MODE_CHANGED);
         filter.addAction(BluetoothDevice.ACTION_FOUND);
         getActivity().registerReceiver(btReceiver, filter);
-
-
 
         btAdapter.startDiscovery();
     }
@@ -146,6 +159,8 @@ public class BtDialogFragment extends DialogFragment {
         Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
         discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 60);
         startActivity(discoverableIntent);
+
+        initPairedDeviceView();
 
         return mView;
     }

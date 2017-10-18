@@ -306,8 +306,8 @@ public class MapView extends View {
         String explorationMapBin = hexToBin(explorationMapHex);
         String obstacleMapBin = hexToBin(obstacleMapHex);
 
-        if (obstacleMapBin.length() == 304) {
-            obstacleMapBin = obstacleMapBin.substring(2, 302);
+        if (explorationMapBin.length() == 304) {
+            explorationMapBin = explorationMapBin.substring(2, 302);
         }
 
         int obstacleIndex = 0;
@@ -328,10 +328,25 @@ public class MapView extends View {
         MapView.this.invalidate();
     }
 
-    public void setRobotPos(int[] robotPos) {
-        this.robotPos[0] = robotPos[0];
-        this.robotPos[1] = robotPos[1];
-        this.robotPos[2] = robotPos[2];
+    public void setRobotPos(String[] robotPos) {
+        int orientation = 0;
+        this.robotPos[0] = Integer.parseInt(robotPos[0]);
+        this.robotPos[1] = Integer.parseInt(robotPos[1]);
+        switch (robotPos[2]) {
+            case "N":
+                orientation = 0;
+                break;
+            case "E":
+                orientation = 90;
+                break;
+            case "S":
+                orientation = 180;
+                break;
+            case "W":
+                orientation = 270;
+                break;
+        }
+        this.robotPos[2] = orientation;
         MapView.this.invalidate();
     }
 

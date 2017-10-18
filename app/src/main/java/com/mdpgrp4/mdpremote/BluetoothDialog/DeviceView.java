@@ -69,7 +69,7 @@ class DeviceView extends LinearLayout {
         @Override
         public boolean onSingleTapConfirmed(MotionEvent e) {
             Log.d("MAC: ", device.getAddress());
-            EventBus.getDefault().post(new MessageEvent(MessageEvent.CONNECT_DEVICE, device));
+            EventBus.getDefault().post(new MessageEvent(MessageEvent.CONNECT_DEVICE, new String[2], new String[3], device));
             return true;
         }
     }

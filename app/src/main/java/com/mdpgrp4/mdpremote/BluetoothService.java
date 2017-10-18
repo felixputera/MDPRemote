@@ -127,16 +127,16 @@ public class BluetoothService extends Service {
                                     message.robotStatus));
                         }
                         if (message.robotPosition != null) {
-                            EventBus.getDefault().post(new MessageEvent(MessageEvent.ROBOT_POS,
-                                    message.robotPosition));
+                            EventBus.getDefault().post(new MessageEvent(MessageEvent.ROBOT_POS, new String[2],
+                                    message.robotPosition, null));
                         }
                         if (message.mapObstacle != null) {
                             EventBus.getDefault().post(new MessageEvent(MessageEvent.MAP,
-                                    new String[]{message.mapObstacle, message.mapExplored}));
+                                    new String[]{message.mapObstacle, message.mapExplored}, new String[3], null));
                         }
                         if (message.grid != null) {
                             EventBus.getDefault().post(new MessageEvent(MessageEvent.MAP,
-                                    new String[]{message.grid, message.mapExplored}));
+                                    new String[]{message.grid, message.mapExplored}, new String[3], null));
                         }
                     }
                     catch (JsonSyntaxException e) {
