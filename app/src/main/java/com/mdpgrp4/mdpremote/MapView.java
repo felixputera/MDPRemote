@@ -383,12 +383,12 @@ public class MapView extends View {
             } else if (touchWaypoint) {
                 for (int i = 0; i < 15; i++) {
                     for (int j = 0; j < 20; j++) {
-                        if (i == x && j == 19 - y && tileStatus[i][j] == STATUS_EMPTY) {
+                        if (i == x && j == 19 - y && (tileStatus[i][j] == STATUS_EMPTY || tileStatus[i][j] == STATUS_UNEXPLORED)) {
                             tileStatus[i][j] = STATUS_SELECTED;
                             waypoint[0] = j;
                             waypoint[1] = i;
                         } else if (tileStatus[i][j] == STATUS_SELECTED) {
-                            tileStatus[i][j] = STATUS_EMPTY;
+                            tileStatus[i][j] = STATUS_UNEXPLORED;
                         }
                     }
                 }

@@ -3,8 +3,10 @@
     <string name="activity_tilt_steering">Tilt Steering</string>
     <string name="controller">Controller</string>
 
+    <!--menu-->
     <string name="bluetooth_connect">Connect Bluetooth</string>
     <string name="bluetooth_disconnect">Disconnect Bluetooth</string>
+    <string name="reset">Reset</string>
 
     <!--bluetooth dialog strings-->
     <string name="bt_dialog_title">Bluetooth</string>
